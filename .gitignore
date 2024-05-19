@@ -1,0 +1,4 @@
+build
+**/.godot
+**/bin
+.sconsign.dblite
