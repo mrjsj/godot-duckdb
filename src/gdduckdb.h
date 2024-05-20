@@ -23,51 +23,51 @@
 namespace godot {
 
 class GDDuckDB : public RefCounted {
-    GDCLASS(GDDuckDB, RefCounted);
+        GDCLASS(GDDuckDB, RefCounted);
 
 private:
 
-    duckdb_database db;
-    duckdb_connection con;
-    TypedArray<Dictionary> query_result = TypedArray<Dictionary>();
+        duckdb_database db;
+        duckdb_connection con;
+        TypedArray<Dictionary> query_result = TypedArray<Dictionary>();
 
-    std::vector<std::unique_ptr<Callable>> function_registry;
-	int64_t verbosity_level = 1;
+        std::vector<std::unique_ptr<Callable>> function_registry;
+        int64_t verbosity_level = 1;
 
 
-    const char* duckdb_type_to_string(duckdb_type type);
+        const char* duckdb_type_to_string(duckdb_type type);
 
 
 protected:
-    static void _bind_methods();
+        static void _bind_methods();
 
 public:
 
-	enum VerbosityLevel {
-		QUIET = 0,
-		NORMAL = 1,
-		VERBOSE = 2,
-		VERY_VERBOSE = 3
-	};
+        enum VerbosityLevel {
+            QUIET = 0,
+            NORMAL = 1,
+            VERBOSE = 2,
+            VERY_VERBOSE = 3
+        };
 
-    GDDuckDB();
-    ~GDDuckDB();
+        GDDuckDB();
+        ~GDDuckDB();
 
-    // Functions
-    bool hello_world();
-    bool open_db();
-    bool close_db();
-    bool connect();
-    bool disconnect();
-    bool query(const String &sql_query);
-    bool query_chunk(const String &sql_query);
+        // Functions
+        bool hello_world();
+        bool open_db();
+        bool close_db();
+        bool connect();
+        bool disconnect();
+        bool query(const String &sql_query);
+        bool query_chunk(const String &sql_query);
 
 
-    void set_query_result(const TypedArray<Dictionary> &p_query_result);
+        void set_query_result(const TypedArray<Dictionary> &p_query_result);
 
-    TypedArray<Dictionary> get_query_result() const;
+        TypedArray<Dictionary> get_query_result() const;
 
-    //void _process(double delta);
+        //void _process(double delta);
 };
 
 }
