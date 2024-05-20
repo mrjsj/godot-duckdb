@@ -82,6 +82,10 @@ jobs:
           python --version
           scons --version
 
+      - name: List files for debugging
+        run: |
+          ls -R
+
       - name: Windows Compilation
         if: runner.os == 'Windows'
         run: |
