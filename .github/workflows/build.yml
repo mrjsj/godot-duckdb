@@ -101,6 +101,7 @@ jobs:
         run: |
           mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
           cd ${{ env.PROJECT_FOLDER }}
+          ls -R
           scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
       - name: Copy DuckDB binaries and fix link (MacOS)
