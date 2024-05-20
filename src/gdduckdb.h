@@ -1,54 +1,73 @@
 #ifndef GDDuckDB_CLASS_H
 #define GDDuckDB_CLASS_H
 
-//#include <Reference.hpp>
-#include "duckdb/duckdb.hpp"
+#include "duckdb/duckdb.h"
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <godot_cpp/core/binder_common.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
-#include <godot_cpp/classes/node2d.hpp>
+#include <godot_cpp/classes/ref_counted.hpp>
 
-#include <godot_cpp/classes/global_constants.hpp>
-#include <godot_cpp/classes/json.hpp>
-#include <godot_cpp/classes/marshalls.hpp>
-#include <godot_cpp/classes/project_settings.hpp>
+//#include <godot_cpp/classes/global_constants.hpp>
+// #include <godot_cpp/classes/marshalls.hpp>
+// #include <godot_cpp/classes/project_settings.hpp>
 
-//#include <vfs/gdsqlite_vfs.h>
-#include <cstring>
-#include <fstream>
-#include <memory>
-#include <sstream>
-#include <vector>
-
-//using namespace godot;
-//using namespace duckdb;
-
+// #include <cstring>
+// #include <fstream>
+// #include <memory>
+// #include <sstream>
+// #include <vector>
 
 namespace godot {
-using DuckDB = duckdb::DuckDB;
 
-class GDDuckDB : public Node2D {
-    GDCLASS(GDDuckDB, Node2D);
+class GDDuckDB : public RefCounted {
+    GDCLASS(GDDuckDB, RefCounted);
 
 private:
-    DuckDB *db;
-    // duckdb::Connection *con;
+
+    duckdb_database db;
+    duckdb_connection con;
+    TypedArray<Dictionary> query_result = TypedArray<Dictionary>();
+
+    std::vector<std::unique_ptr<Callable>> function_registry;
+	int64_t verbosity_level = 1;
+
+
+    const char* duckdb_type_to_string(duckdb_type type);
+
 
 protected:
     static void _bind_methods();
 
 public:
-    GDDuckDB();
 
+	enum VerbosityLevel {
+		QUIET = 0,
+		NORMAL = 1,
+		VERBOSE = 2,
+		VERY_VERBOSE = 3
+	};
+
+    GDDuckDB();
     ~GDDuckDB();
 
     // Functions
-    Array hello_world();
+    bool hello_world();
+    bool open_db();
+    bool close_db();
+    bool connect();
+    bool disconnect();
+    bool query(const String &sql_query);
+    bool query_chunk(const String &sql_query);
 
-    void _process(double delta);    
+
+    void set_query_result(const TypedArray<Dictionary> &p_query_result);
+
+    TypedArray<Dictionary> get_query_result() const;
+
+    //void _process(double delta);
 };
 
 }

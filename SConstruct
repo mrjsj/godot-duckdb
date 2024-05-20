@@ -2,7 +2,15 @@
 import os
 import sys
 
+target_path = ARGUMENTS.pop("target_path", "demo/addons/godot-duckdb/bin/")
+target_name = ARGUMENTS.pop("target_name", "libgdduckdb")
+
+target = "{}{}".format(
+    target_path, target_name
+)
+
 env = SConscript("godot-cpp/SConstruct")
+#env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=1
 
 # For reference:
 # - CCFLAGS are compilation flags shared between C and C++
@@ -16,28 +24,31 @@ env = SConscript("godot-cpp/SConstruct")
 env.Append(CPPPATH=["src/"])
 sources = [Glob("src/*.cpp")]
 
-duckdb_include_path = "src/duckdb"
-# duckdb_lib_path = "./src/duckdb/"
+# Add duckdb dylib as dependency
+dylib_path = 'src/duckdb'
+dylib_name = 'libduckdb'
+env.Append(LIBPATH=[dylib_path])
+env.Append(LIBS=[dylib_name])
 
-env.Append(CPPPATH=[duckdb_include_path])
-env.Append(HPPPATH=[duckdb_include_path])
-# env.Append(LIBPATH=[duckdb_lib_path])
-# env.Append(LIBS=['libduckdb.dylib'])
-
-# env.Append(LIBPATH=['demo/bin/'])
-# env.Append(LIBS=['libduckdb.dylib'])
+# Allow exceptions in code, this is required becausse DuckDB throws errors
+env.Append(CCFLAGS=['-fexceptions'])
 
 if env["platform"] == "macos":
-    library = env.SharedLibrary(
-        "demo/bin/gdduckdb.{}.{}.framework/gdduckdb.{}.{}".format(
-            env["platform"], env["target"], env["platform"], env["target"]
-        ),
-        source=sources,
+    target = "{}.{}.{}.framework/{}.{}.{}".format(
+        target,
+        env["platform"], 
+        env["target"],
+        target_name,
+        env["platform"],
+        env["target"]
     )
 else:
-    library = env.SharedLibrary(
-        "demo/bin/gdduckdb{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-        source=sources,
+    target = "{}{}{}".format(
+        target,
+        env["suffix"],
+        env["SHLIBSUFFIX"]
     )
 
+library = env.SharedLibrary(target=target, source=sources)
 Default(library)
+
