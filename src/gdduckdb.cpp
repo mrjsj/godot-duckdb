@@ -41,8 +41,13 @@ GDDuckDB::~GDDuckDB() {
         function_registry.clear();
         function_registry.shrink_to_fit();
         /* Close the database connection if it is still open */
-        disconnect();
-        close_db();
+        if (con) {
+            disconnect();
+            if (db) {
+                close_db();
+            }
+        }
+        
 }
 
 bool GDDuckDB::hello_world() {
