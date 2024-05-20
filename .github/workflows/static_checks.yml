@@ -1,6 +1,7 @@
 # NOTE: The content of this file has been directly adapted from /godot-cpp/.workflows/static_checks.yml
 name: 📊 Static Checks
-on: [push, pull_request]
+on: 
+  workflow_dispatch:
 
 jobs:
   static-checks:
