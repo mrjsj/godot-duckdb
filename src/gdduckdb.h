@@ -14,11 +14,11 @@
 // #include <godot_cpp/classes/marshalls.hpp>
 // #include <godot_cpp/classes/project_settings.hpp>
 
-// #include <cstring>
-// #include <fstream>
-// #include <memory>
-// #include <sstream>
-// #include <vector>
+#include <cstring>
+#include <fstream>
+#include <memory>
+#include <sstream>
+#include <vector>
 
 namespace godot {
 

@@ -1,5 +1,4 @@
 #include "gdduckdb.h"
-//#include "duckdb/duckdb.hpp"
 
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -9,7 +8,7 @@
 
 using namespace godot;
 using namespace std;
-//using namespace duckdb;
+
 
 void GDDuckDB::_bind_methods() {
         // Bind the select_from_table method to be callable from Godot
