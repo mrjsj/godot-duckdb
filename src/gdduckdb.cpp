@@ -1,8 +1,8 @@
 #include "gdduckdb.h"
 //#include "duckdb/duckdb.hpp"
 
-#include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/time.hpp>
+#include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -262,13 +262,12 @@ TypedArray<Dictionary> GDDuckDB::get_query_result() const {
 
 
 bool GDDuckDB::disconnect() {
-    if (!con) {
-        UtilityFunctions::printerr("GDDuckDB Error: Can't disconnect when no connection is open!");
-        return false;
-    }
-    duckdb_disconnect(&con);
-    return true;
-
+        if (!con) {
+            UtilityFunctions::printerr("GDDuckDB Error: Can't disconnect when no connection is open!");
+            return false;
+        }
+        duckdb_disconnect(&con);
+        return true;
 }
 
 
