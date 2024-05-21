@@ -51,7 +51,7 @@ GDDuckDB::~GDDuckDB() {
 
 bool GDDuckDB::hello_world() {
         duckdb_result result;
-        duckdb_state status = duckdb_query(con, "SELECT 'Hello, World!'", &result); 
+        duckdb_state status = duckdb_query(con, "SELECT 'Hello, World!!!'", &result); 
 
         if (status == DuckDBError) {
             UtilityFunctions::printerr("GDDuckDB Error: Failed to run query.");
@@ -141,49 +141,18 @@ bool GDDuckDB::query(const String &sql_query) {
         idx_t row_count = duckdb_row_count(&result);
         query_result.clear(); // Clear previous results
 
+
         for (idx_t row_idx = 0; row_idx < row_count; ++row_idx) {
             Dictionary row_dict;
 
             for (idx_t col_idx = 0; col_idx < column_count; ++col_idx) {
 
                 const char *col_name = duckdb_column_name(&result, col_idx);
-                duckdb_type col_type = duckdb_column_type(&result, col_idx);
+        
+                Variant col_value = map_duckdb_type_to_godot_variant(result, col_idx, row_idx);
 
-                Variant col_value;
+                
 
-                if (duckdb_value_is_null(&result, col_idx, row_idx)) {
-                    col_value = Variant(); // Assign null
-                } else {
-                    switch (col_type) {
-                        case DUCKDB_TYPE_BOOLEAN:
-                            col_value = Variant((bool)duckdb_value_boolean(&result, col_idx, row_idx));
-                            break;
-                        case DUCKDB_TYPE_INTEGER:
-                            col_value = Variant((int)duckdb_value_int32(&result, col_idx, row_idx));
-                            break;
-                        case DUCKDB_TYPE_BIGINT:
-                            col_value = Variant((int64_t)duckdb_value_int64(&result, col_idx, row_idx));
-                            break;
-                        case DUCKDB_TYPE_DECIMAL:
-                            col_value = Variant(duckdb_decimal_to_double(duckdb_value_decimal(&result, col_idx, row_idx)));
-                        case DUCKDB_TYPE_FLOAT:
-                            col_value = Variant((float)duckdb_value_float(&result, col_idx, row_idx));
-                            break;
-                        case DUCKDB_TYPE_DOUBLE:
-                            col_value = Variant(duckdb_value_double(&result, col_idx, row_idx));
-                            break;
-                        case DUCKDB_TYPE_VARCHAR:
-                            {
-                                char *str_value = duckdb_value_string(&result, col_idx, row_idx).data;
-                                col_value = Variant(String(str_value));
-                                duckdb_free(str_value);
-                            }
-                            break;
-                        default:
-                            UtilityFunctions::printerr("Unhandled column type: (" + String(std::to_string(col_type).c_str()) + ") " + String(duckdb_type_to_string(col_type)));
-                            break;
-                    }
-                }
                 row_dict[String(col_name)] = col_value;
             }
 
@@ -192,6 +161,79 @@ bool GDDuckDB::query(const String &sql_query) {
 
         duckdb_destroy_result(&result);
         return true;
+}
+
+Variant GDDuckDB::map_duckdb_type_to_godot_variant(duckdb_result &result, idx_t col_idx, idx_t row_idx){
+
+        duckdb_type col_type = duckdb_column_type(&result, col_idx);
+        UtilityFunctions::print(duckdb_type_to_string(col_type));
+        
+        if (duckdb_value_is_null(&result, col_idx, row_idx)) {
+            return Variant(); // Assign null
+        } 
+
+        Variant col_value;
+        switch (col_type) {
+            case DUCKDB_TYPE_BOOLEAN:
+                col_value = Variant((bool)duckdb_value_boolean(&result, col_idx, row_idx));
+                break;
+            case DUCKDB_TYPE_TINYINT:
+                col_value = Variant((int8_t)duckdb_value_int8(&result, col_idx, row_idx));
+                break;
+            case DUCKDB_TYPE_UTINYINT:
+                col_value = Variant((uint8_t)duckdb_value_uint8(&result, col_idx, row_idx));
+                break;                    
+            case DUCKDB_TYPE_SMALLINT:
+                col_value = Variant((int16_t)duckdb_value_int16(&result, col_idx, row_idx));
+                break;
+            case DUCKDB_TYPE_USMALLINT:
+                col_value = Variant((uint16_t)duckdb_value_uint16(&result, col_idx, row_idx));
+                break;
+            case DUCKDB_TYPE_INTEGER:
+                col_value = Variant((int32_t)duckdb_value_int32(&result, col_idx, row_idx));    
+                break;
+            case DUCKDB_TYPE_UINTEGER:
+                col_value = Variant((uint32_t)duckdb_value_uint32(&result, col_idx, row_idx));    
+                break;                    
+            case DUCKDB_TYPE_BIGINT:
+                col_value = Variant((int64_t)duckdb_value_int64(&result, col_idx, row_idx));
+                break;
+            case DUCKDB_TYPE_UBIGINT:
+                col_value = Variant((uint64_t)duckdb_value_uint64(&result, col_idx, row_idx));
+                break;                    
+            case DUCKDB_TYPE_FLOAT:
+                col_value = Variant((float)duckdb_value_float(&result, col_idx, row_idx));
+                break;
+            case DUCKDB_TYPE_DOUBLE:
+                col_value = Variant((double_t)duckdb_value_double(&result, col_idx, row_idx));
+                break;
+            case DUCKDB_TYPE_DECIMAL:
+                col_value = Variant((double_t)duckdb_decimal_to_double(duckdb_value_decimal(&result, col_idx, row_idx)));
+                break;
+            case DUCKDB_TYPE_DATE:
+            case DUCKDB_TYPE_TIME:
+            case DUCKDB_TYPE_TIMESTAMP:              
+            case DUCKDB_TYPE_INTERVAL:
+            case DUCKDB_TYPE_VARCHAR:
+                {
+                    char *str_value = duckdb_value_string(&result, col_idx, row_idx).data;
+                    col_value = Variant(String(str_value));
+                    duckdb_free(str_value);
+                }
+                break;
+            case DUCKDB_TYPE_BLOB:
+            case DUCKDB_TYPE_TIMESTAMP_TZ:
+            case DUCKDB_TYPE_ENUM:
+            case DUCKDB_TYPE_LIST:
+            case DUCKDB_TYPE_MAP:
+            case DUCKDB_TYPE_STRUCT:
+            case DUCKDB_TYPE_INVALID:
+            default:                       
+                UtilityFunctions::printerr("Unhandled column type: (" + String(std::to_string(col_type).c_str()) + ") " + String(duckdb_type_to_string(col_type)));
+                break;
+        }
+
+        return col_value;
 }
 
 const char* GDDuckDB::duckdb_type_to_string(duckdb_type type) {
@@ -284,6 +326,6 @@ bool GDDuckDB::close_db() {
             return false;
         }
 
-        //duckdb_close(&db);
+        duckdb_close(&db);
         return true;
 }

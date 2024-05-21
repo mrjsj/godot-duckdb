@@ -36,7 +36,7 @@ private:
 
 
         const char* duckdb_type_to_string(duckdb_type type);
-
+        Variant map_duckdb_type_to_godot_variant(duckdb_result &result, idx_t col_idx, idx_t row_idx);
 
 protected:
         static void _bind_methods();
