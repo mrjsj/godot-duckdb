@@ -92,13 +92,13 @@ jobs:
         run: |
           curl -OL ${{ env.DUCKDB_BASE_URL }}${{ matrix.duckdb-url-name }}.zip
           unzip ${{ matrix.duckdb-url-name }}.zip
-
+          ls
           if(-Not (Test-Path -Path ${{ env.PROJECT_FOLDER }}\${{ env.TARGET_PATH }}))
           {
             mkdir ${{ env.PROJECT_FOLDER }}\${{ env.TARGET_PATH }}
           }
-          mv ${{ matrix.duckdb-url-name }} ${{ env.PROJECT_FOLDER }}\${{ matrix.duckdb-url-name }}
-          dir
+          
+          ls
           cd ${{ env.PROJECT_FOLDER }}
           scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=${{ matrix.duckdb-lib-name }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
