@@ -10,7 +10,7 @@
             "artifact-extension": "framework",
             "flags": "arch=universal",
             "cache-name": "macos-universal",
-            "duckdb-url-name": "https://github.com/duckdb/duckdb/releases/download/v0.10.2/libduckdb-osx-universal.zip",
+            "duckdb-url-name": "libduckdb-osx-universal",
             "duckdb-lib-name": "libduckdb.dylib"            
         },
         {
@@ -21,7 +21,7 @@
             "additional-python-packages": "pywin32",
             "cache-name": "win-x86_64-msvc",
             "skip": true,
-            "duckdb-url-name": "libduckdb-windows-amd64.zip",
+            "duckdb-url-name": "libduckdb-windows-amd64",
             "duckdb-lib-name": "libduckdb.dylib"            
         },
         {
@@ -31,7 +31,7 @@
             "artifact-extension": "dll",
             "flags": "use_mingw=yes",
             "cache-name": "win-x86_64-mingw",
-            "duckdb-url-name": "https://github.com/duckdb/duckdb/releases/download/v0.10.2/libduckdb-windows-amd64.zip",
+            "duckdb-url-name": "libduckdb-windows-amd64",
             "duckdb-lib-name": "duckdb.dll"              
         }
     ]
