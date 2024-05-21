@@ -91,7 +91,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           curl -OL ${{ env.DUCKDB_BASE_URL }}${{ matrix.duckdb-url-name }}.zip
-          unzip ${{ matrix.duckdb-lib-name }}
+          unzip ${{ matrix.duckdb-url-name }}.zip
 
           if(-Not (Test-Path -Path ${{ env.PROJECT_FOLDER }}\${{ env.TARGET_PATH }}))
           {
