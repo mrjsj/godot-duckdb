@@ -22,7 +22,7 @@
             "cache-name": "win-x86_64-msvc",
             "skip": true,
             "duckdb-url-name": "libduckdb-windows-amd64",
-            "duckdb-lib-name": "libduckdb.dylib"            
+            "duckdb-lib-name": "duckdb.dll"         
         },
         {
             "name": "Windows (x86_64, MinGW)",

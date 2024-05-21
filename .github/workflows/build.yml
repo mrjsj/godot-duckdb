@@ -99,6 +99,7 @@ jobs:
           }
           
           cd ${{ env.PROJECT_FOLDER }}
+          cp ${{ matrix.duckdb-url-name }}\${{ matrix.duckdb-lib-name }} C:\Windows\System32\          
           cp ${{ matrix.duckdb-url-name }}\${{ matrix.duckdb-lib-name }} ${{ env.TARGET_PATH }}\${{ matrix.duckdb-lib-name }}
           scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=${{ matrix.duckdb-lib-name }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
@@ -137,7 +138,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.platform }}
-          path: ${{ env.ARTIFACT_FOLDER }}*.${{ matrix.artifact-extension }}
+          path: ${{ env.ARTIFACT_FOLDER }}
           if-no-files-found: error
 
   release:
