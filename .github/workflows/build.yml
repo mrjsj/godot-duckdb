@@ -98,7 +98,7 @@ jobs:
             mkdir ${{ env.PROJECT_FOLDER }}\${{ env.TARGET_PATH }}
           }
           mv ${{ matrix.duckdb-url-name }} ${{ env.PROJECT_FOLDER }}\${{ matrix.duckdb-url-name }}
-          ls -R
+          dir
           cd ${{ env.PROJECT_FOLDER }}
           scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=${{ matrix.duckdb-lib-name }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
