@@ -4,6 +4,8 @@ import sys
 
 target_path = ARGUMENTS.pop("target_path", "demo/addons/godot-duckdb/bin/")
 target_name = ARGUMENTS.pop("target_name", "libgdduckdb")
+duckdb_lib_path = ARGUMENTS.pop("duckdb_lib_path", "src/duckdb")
+duckdb_lib_name = ARGUMENTS.pop("duckdb_lib_name", "libduckdb.dylib")
 
 target = "{}{}".format(
     target_path, target_name
@@ -25,10 +27,8 @@ env.Append(CPPPATH=["src/"])
 sources = [Glob("src/*.cpp")]
 
 # Add duckdb dylib as dependency
-dylib_path = 'src/duckdb'
-dylib_name = 'libduckdb'
-env.Append(LIBPATH=[dylib_path])
-env.Append(LIBS=[dylib_name])
+env.Append(LIBPATH=[duckdb_lib_path])
+env.Append(LIBS=[duckdb_lib_name])
 
 # Allow exceptions in code, this is required becausse DuckDB throws errors
 env.Append(CCFLAGS=['-fexceptions'])

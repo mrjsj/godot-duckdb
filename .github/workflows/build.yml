@@ -14,6 +14,7 @@ env:
   SCONS_CACHE: ${{ github.workspace }}/.scons-cache/
   EM_VERSION: 3.1.39
   EM_CACHE_FOLDER: "emsdk-cache"
+  DUCKDB_BASE_URL: https://github.com/duckdb/duckdb/releases/download/v0.10.2/
 
 jobs:
   matrix:
@@ -89,12 +90,17 @@ jobs:
       - name: Windows Compilation
         if: runner.os == 'Windows'
         run: |
+          curl -OL ${{ env.DUCKDB_BASE_URL }}${{ matrix.duckdb-url-name }}.zip
+          unzip ${{ matrix.duckdb-lib-name }}
+
           if(-Not (Test-Path -Path ${{ env.PROJECT_FOLDER }}\${{ env.TARGET_PATH }}))
           {
             mkdir ${{ env.PROJECT_FOLDER }}\${{ env.TARGET_PATH }}
           }
+          mv ${{ matrix.duckdb-url-name }} ${{ env.PROJECT_FOLDER }}\${{ matrix.duckdb-url-name }}
+          ls -R
           cd ${{ env.PROJECT_FOLDER }}
-          scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
+          scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=${{ matrix.duckdb-lib-name }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
       - name: Not Windows Compilation
         if: runner.os != 'Windows'

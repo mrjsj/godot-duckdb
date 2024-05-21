@@ -26,3 +26,5 @@ scons_stats.json
 # Custom
 test.csv
 scripts/build.sh
+scripts/debug.sh
+src/*.os
