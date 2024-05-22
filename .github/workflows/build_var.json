@@ -1,6 +1,6 @@
 {
     "targets": [
-        "template_debug"
+        "template_release"
     ],
     "jobs": [
         {
@@ -31,6 +31,7 @@
             "artifact-extension": "dll",
             "flags": "use_mingw=yes",
             "cache-name": "win-x86_64-mingw",
+            "skip": true,
             "duckdb-url-name": "libduckdb-windows-amd64",
             "duckdb-lib-name": "duckdb"              
         },
