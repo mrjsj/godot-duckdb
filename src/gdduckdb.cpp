@@ -51,7 +51,7 @@ GDDuckDB::~GDDuckDB() {
 
 bool GDDuckDB::hello_world() {
         duckdb_result result;
-        duckdb_state status = duckdb_query(con, "SELECT 'Hello, World!!!'", &result); 
+        duckdb_state status = duckdb_query(con, "SELECT 'Hello, World!'", &result); 
 
         if (status == DuckDBError) {
             UtilityFunctions::printerr("GDDuckDB Error: Failed to run query.");
