@@ -53,7 +53,8 @@ sql_query = "SELECT 'Hello, world!' AS msg"
 
 db.query(sql_query)
 
-print(db.query_result)
+var result = db.get_query_result()
+print(result)
 # prints "[{ "msg": "Hello, world!" }]"
 
 db.disconnect()

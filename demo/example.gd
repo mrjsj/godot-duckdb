@@ -9,9 +9,10 @@ func _ready():
 	db.connect()
 	
 	var sql_query = "SELECT 'Hello, world!' as msg;"
-	
 	db.query(sql_query)
-	print(db.query_result)
+	
+	var result = db.get_query_result()
+	print(result)
 	
 	var data_query = """
 	-- Create a new table with the specified columns
@@ -34,9 +35,10 @@ func _ready():
 	
 	SELECT * FROM sample_table;
 	"""
-	
 	db.query(data_query)
-	print(db.query_result)	
+	var data_result = db.get_query_result()
+	
+	print(data_result)
 
 	db.disconnect()
 	db.close_db()
