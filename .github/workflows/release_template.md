@@ -2,15 +2,12 @@ Download the demo-project and/or the necessary binaries below.
 
 ### Dependencies Versions
 
-Godot vxx.xx.xx  
-SQLite vxx.xx.xx
+Godot v4.2.2  
+DuckDB v0.10.2
 
 ### Supported Operating Systems:
 - Mac OS X (universal)
-- Linux
 - Windows
-- Android (arm64 & x86_64)
-- iOS (arm64)
 
 #### What's new?
 - First new thing
