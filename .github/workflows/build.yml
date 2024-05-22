@@ -110,21 +110,21 @@ jobs:
       #   run: |
       #     dumpbin /DEPENDENTS ${{ env.TARGET_PATH }}\libgdduckdb.windows.template_debug.x86_64
 
-      # - name: Not Windows Compilation
-      #   if: runner.os != 'Windows'
-      #   run: |
-      #     mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
-      #     cd ${{ env.PROJECT_FOLDER }}
-      #     ls -R
-      #     scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
+      - name: Not Windows Compilation
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
+          cd ${{ env.PROJECT_FOLDER }}
+          ls -R
+          scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
-      # - name: Copy DuckDB binaries and fix link (MacOS)
-      #   if: ${{ matrix.platform == 'macos' }}
-      #   run: |
-      #     cp ./src/duckdb/libduckdb.dylib ./${{ env.TARGET_PATH }}/libduckdb.dylib
-      #     install_name_tool -change @rpath/libduckdb.dylib @loader_path/../libduckdb.dylib ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.macos.template_debug.framework/${{ env.TARGET_NAME }}.macos.template_debug
-      #     ls -R ./${{ env.TARGET_PATH }}
-      #     otool -L ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.macos.template_debug.framework/${{ env.TARGET_NAME }}.macos.template_debug
+      - name: Copy DuckDB binaries and fix link (MacOS)
+        if: ${{ matrix.platform == 'macos' }}
+        run: |
+          cp ./src/duckdb/libduckdb.dylib ./${{ env.TARGET_PATH }}/libduckdb.dylib
+          install_name_tool -change @rpath/libduckdb.dylib @loader_path/../libduckdb.dylib ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.macos.template_debug.framework/${{ env.TARGET_NAME }}.macos.template_debug
+          ls -R ./${{ env.TARGET_PATH }}
+          otool -L ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.macos.template_debug.framework/${{ env.TARGET_NAME }}.macos.template_debug
 
       # - name: Copy DuckDB binaries and fix link (Not MacOS)
       #   if: ${{ matrix.platform != 'macos' }}

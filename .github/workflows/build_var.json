@@ -33,6 +33,13 @@
             "cache-name": "win-x86_64-mingw",
             "duckdb-url-name": "libduckdb-windows-amd64",
             "duckdb-lib-name": "duckdb"              
+        },
+        {
+            "name": "Ubuntu (GCC)",
+            "os": "ubuntu-20.04",
+            "platform": "linux",
+            "artifact-extension": "so",
+            "cache-name": "linux-x86_64"
         }
     ]
 }

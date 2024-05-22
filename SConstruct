@@ -27,8 +27,8 @@ env.Append(CPPPATH=["src/"])
 sources = [Glob("src/*.cpp")]
 
 # Add duckdb dylib as dependency
-env.Append(LIBPATH=[duckdb_lib_path])
-env.Append(LIBS=[duckdb_lib_name])
+# env.Append(LIBPATH=[duckdb_lib_path])
+# env.Append(LIBS=[duckdb_lib_name])
 
 # Allow exceptions in code, this is required becausse DuckDB throws errors
 env.Append(CCFLAGS=['-fexceptions'])
