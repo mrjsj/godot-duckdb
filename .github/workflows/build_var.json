@@ -1,5 +1,6 @@
 {
     "targets": [
+        "template_debug",
         "template_release"
     ],
     "jobs": [
@@ -31,7 +32,6 @@
             "artifact-extension": "dll",
             "flags": "use_mingw=yes",
             "cache-name": "win-x86_64-mingw",
-            "skip": true,
             "duckdb-url-name": "libduckdb-windows-amd64",
             "duckdb-lib-name": "duckdb"              
         },
@@ -40,6 +40,7 @@
             "os": "ubuntu-20.04",
             "platform": "linux",
             "artifact-extension": "so",
+            "skip": true,
             "cache-name": "linux-x86_64"
         },
         {
@@ -48,6 +49,7 @@
             "platform": "android",
             "artifact-extension": "so",
             "flags": "arch=x86_64",
+            "skip": true,
             "cache-name": "android-x86_64"
         },
         {
@@ -56,6 +58,7 @@
             "platform": "android",
             "artifact-extension": "so",
             "flags": "arch=arm64",
+            "skip": true,
             "cache-name": "android-arm64"
         },
         {
@@ -64,12 +67,14 @@
             "platform": "ios",
             "artifact-extension": "dylib",
             "flags": "arch=arm64",
+            "skip": true,
             "cache-name": "ios-arm64"
         },
         {
             "name": "Web (wasm32)",
             "os": "ubuntu-20.04",
             "platform": "web",
+            "skip": true,
             "artifact-extension": "wasm",
             "cache-name": "web-wasm32"
         }        
