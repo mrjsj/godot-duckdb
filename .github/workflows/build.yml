@@ -105,10 +105,10 @@ jobs:
           ls -R
           scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=duckdb target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
-      - name: Windows Compilation Dump Dependants
-        if: runner.os == 'Windows'
-        run: |
-          dumpbin /DEPENDENTS ${{ env.TARGET_PATH }}\libgdduckdb.windows.template_debug.x86_64
+      # - name: Windows Compilation Dump Dependants
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     dumpbin /DEPENDENTS ${{ env.TARGET_PATH }}\libgdduckdb.windows.template_debug.x86_64
 
       # - name: Not Windows Compilation
       #   if: runner.os != 'Windows'
