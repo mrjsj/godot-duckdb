@@ -103,7 +103,7 @@ jobs:
           cp ${{ matrix.duckdb-url-name }}\${{ matrix.duckdb-lib-name }}.dll ${{ env.TARGET_PATH }}\${{ matrix.duckdb-lib-name }}.dll
           cp ${{ matrix.duckdb-url-name }}\${{ matrix.duckdb-lib-name }}.lib ${{ env.TARGET_PATH }}\${{ matrix.duckdb-lib-name }}.lib          
           ls -R
-          scons platform=windows target=${{ matrix.target }} target_path=${{ matrix.duckdb-url-name }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=duckdb.lib target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
+          scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=duckdb target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
       - name: Windows Compilation Dump Dependants
         if: runner.os == 'Windows'
