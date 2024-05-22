@@ -166,7 +166,6 @@ bool GDDuckDB::query(const String &sql_query) {
 Variant GDDuckDB::map_duckdb_type_to_godot_variant(duckdb_result &result, idx_t col_idx, idx_t row_idx){
 
         duckdb_type col_type = duckdb_column_type(&result, col_idx);
-        UtilityFunctions::print(duckdb_type_to_string(col_type));
         
         if (duckdb_value_is_null(&result, col_idx, row_idx)) {
             return Variant(); // Assign null
