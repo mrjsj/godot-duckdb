@@ -40,6 +40,37 @@
             "platform": "linux",
             "artifact-extension": "so",
             "cache-name": "linux-x86_64"
-        }
+        },
+        {
+            "name": "Android (x86_64)",
+            "os": "ubuntu-20.04",
+            "platform": "android",
+            "artifact-extension": "so",
+            "flags": "arch=x86_64",
+            "cache-name": "android-x86_64"
+        },
+        {
+            "name": "Android (arm64)",
+            "os": "ubuntu-20.04",
+            "platform": "android",
+            "artifact-extension": "so",
+            "flags": "arch=arm64",
+            "cache-name": "android-arm64"
+        },
+        {
+            "name": "iOS (arm64)",
+            "os": "macos-11",
+            "platform": "ios",
+            "artifact-extension": "dylib",
+            "flags": "arch=arm64",
+            "cache-name": "ios-arm64"
+        },
+        {
+            "name": "Web (wasm32)",
+            "os": "ubuntu-20.04",
+            "platform": "web",
+            "artifact-extension": "wasm",
+            "cache-name": "web-wasm32"
+        }        
     ]
 }
