@@ -122,9 +122,9 @@ jobs:
         if: ${{ matrix.platform == 'macos' }}
         run: |
           cp ./src/duckdb/libduckdb.dylib ./${{ env.TARGET_PATH }}/libduckdb.dylib
-          install_name_tool -change @rpath/libduckdb.dylib @loader_path/../libduckdb.dylib ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.macos.template_debug.framework/${{ env.TARGET_NAME }}.macos.template_debug
+          install_name_tool -change @rpath/libduckdb.dylib @loader_path/../libduckdb.dylib ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}.framework/${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}
           ls -R ./${{ env.TARGET_PATH }}
-          otool -L ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.macos.template_debug.framework/${{ env.TARGET_NAME }}.macos.template_debug
+          otool -L ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}.framework/${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}
 
       # - name: Copy DuckDB binaries and fix link (Not MacOS)
       #   if: ${{ matrix.platform != 'macos' }}
