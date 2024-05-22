@@ -1,6 +1,6 @@
 
 
-![gdduckdb](logo/gdduckdb.png?raw=true  "Godot DuckDB Icon")
+![gdduckdb](logo/gdduckdb-128x128.png?raw=true  "Godot DuckDB Icon")
 
 # godot-duckdb
 
