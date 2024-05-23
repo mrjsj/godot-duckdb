@@ -48,7 +48,7 @@ GDDuckDB::~GDDuckDB() {
         
 }
 
-bool GDDuckDB::is_valid_connection() {
+bool GDDuckDB::is_connection_valid() {
     if (!db) {
         UtilityFunctions::printerr("GDDuckDB Error: Database must be opened. Hint: Use `open_db()`");
         return false;
@@ -62,7 +62,7 @@ bool GDDuckDB::is_valid_connection() {
 }
 
 bool GDDuckDB::query_chunk(const String &sql_query) {
-        if (!is_valid_connection()){
+        if (!is_connection_valid()){
             return false;
         }
 
@@ -120,7 +120,7 @@ bool GDDuckDB::query_chunk(const String &sql_query) {
 
 bool GDDuckDB::query(const String &sql_query) {
         
-        if (!is_valid_connection()){
+        if (!is_connection_valid()){
             return false;
         }
 
@@ -207,7 +207,7 @@ Variant GDDuckDB::map_duckdb_type_to_godot_variant(duckdb_result &result, idx_t 
                 break;
             case DUCKDB_TYPE_DATE:
             case DUCKDB_TYPE_TIME:
-            case DUCKDB_TYPE_TIMESTAMP:              
+            case DUCKDB_TYPE_TIMESTAMP:
             case DUCKDB_TYPE_INTERVAL:
             case DUCKDB_TYPE_VARCHAR:
                 {
@@ -273,7 +273,7 @@ bool GDDuckDB::connect() {
             return true;
         }
 
-        UtilityFunctions::printerr("GDDuckDB Error: Can't connect if database is not opened. Please run open_db first.");
+        UtilityFunctions::printerr("GDDuckDB Error: Can't connect if database is not opened. Hint: Use `open_db` first.");
         return false;
 }
 
@@ -302,7 +302,7 @@ TypedArray<Dictionary> GDDuckDB::get_query_result() const {
 
 bool GDDuckDB::disconnect() {
         if (!con) {
-            UtilityFunctions::printerr("GDDuckDB Error: Can't disconnect when no connection is open!");
+            UtilityFunctions::printerr("GDDuckDB Error: Can't disconnect when no connection is connected!");
             return false;
         }
         duckdb_disconnect(&con);
@@ -312,12 +312,12 @@ bool GDDuckDB::disconnect() {
 
 bool GDDuckDB::close_db() {
         if (con) {
-            UtilityFunctions::printerr("GDDuckDB Error: Can't close database if connection is still open!");
+            UtilityFunctions::printerr("GDDuckDB Error: Can't close database if connection is still connected!");
             return false;
         }
 
         if (!db) {
-            UtilityFunctions::printerr("GDDuckDB Error: Can't close database when no database is currently connected!");
+            UtilityFunctions::printerr("GDDuckDB Error: Can't close database when no database is currently open!");
             return false;
         }
 
