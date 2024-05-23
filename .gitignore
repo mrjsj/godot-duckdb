@@ -25,7 +25,7 @@ scons_stats.json
 
 # Custom
 test.csv
-scripts/build.sh
+build.sh
 scripts/debug.sh
 src/*.os
 .DS_Store
