@@ -12,7 +12,6 @@ using namespace std;
 
 void GDDuckDB::_bind_methods() {
         // Bind the select_from_table method to be callable from Godot
-        ClassDB::bind_method(D_METHOD("hello_world"), &GDDuckDB::hello_world);
 
         ClassDB::bind_method(D_METHOD("open_db"), &GDDuckDB::open_db);
         ClassDB::bind_method(D_METHOD("close_db"), &GDDuckDB::close_db);
@@ -49,32 +48,24 @@ GDDuckDB::~GDDuckDB() {
         
 }
 
-bool GDDuckDB::hello_world() {
-        duckdb_result result;
-        duckdb_state status = duckdb_query(con, "SELECT 'Hello, World!'", &result); 
+bool GDDuckDB::is_valid_connection() {
+    if (!db) {
+        UtilityFunctions::printerr("GDDuckDB Error: Database must be opened. Hint: Use `open_db()`");
+        return false;
+    }
 
-        if (status == DuckDBError) {
-            UtilityFunctions::printerr("GDDuckDB Error: Failed to run query.");
-            duckdb_destroy_result(&result);
-            return false;
-        }
-
-        if (duckdb_row_count(&result) > 0 && duckdb_column_count(&result) > 0) {
-            // Extract the string value from the first column of the first row
-            char *value = duckdb_value_varchar(&result, 0, 0);
-            if (value) {
-                // Print the value using UtilityFunctions
-                UtilityFunctions::print(value);
-                // Free the value after use
-                duckdb_free(value);
-            }
-        }
-
-        duckdb_destroy_result(&result);
-        return true;
+    if (!con) {
+        UtilityFunctions::printerr("GDDuckDB Error: Connection must be made be opened. Hint: Use `connect()`");
+        return false;
+    }
+    return true;
 }
 
 bool GDDuckDB::query_chunk(const String &sql_query) {
+        if (!is_valid_connection()){
+            return false;
+        }
+
         duckdb_result result;
         duckdb_state status = duckdb_query(con, sql_query.utf8(), &result);
 
@@ -128,6 +119,11 @@ bool GDDuckDB::query_chunk(const String &sql_query) {
 }
 
 bool GDDuckDB::query(const String &sql_query) {
+        
+        if (!is_valid_connection()){
+            return false;
+        }
+
         duckdb_result result;
         duckdb_state status = duckdb_query(con, sql_query.utf8(), &result);
 
