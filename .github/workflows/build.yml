@@ -197,6 +197,12 @@ jobs:
         with:
           fetch-depth: 0 # Fetch all history for all tags and branches
 
+      - name: Download Artifacts
+        id: download
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts          
+
       - name: Find latest assetlib branch
         id: find_branch
         run: |
@@ -218,7 +224,14 @@ jobs:
 
       - name: Extract binaries to bin directory
         run: |
-          unzip artifacts/bin.zip -d addons/godot-duckdb/bin
+          cd ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
+          cd ${{ env.PROJECT_FOLDER }}
+          cp -r ${{steps.download.outputs.download-path}}/bin/* ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
+          # #zip -r demo.zip demo/
+          # #cd ${{ env.TARGET_PATH }}/..
+          # zip -r bin.zip bin/
+          # cp -r bin/
+          # unzip artifacts/bin.zip -d addons/godot-duckdb/bin
 
       - name: Commit changes and push
         run: |
