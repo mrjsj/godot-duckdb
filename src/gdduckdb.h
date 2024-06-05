@@ -34,10 +34,10 @@ private:
         std::vector<std::unique_ptr<Callable>> function_registry;
         int64_t verbosity_level = 1;
 
-	bool read_only = false;
+        bool read_only = false;
         
         CharString path_utf8;
-	const char* path = ":memory:";
+        const char* path = ":memory:";
 
         const char* duckdb_type_to_string(duckdb_type type);
         Variant map_duckdb_type_to_godot_variant(duckdb_result &result, idx_t col_idx, idx_t row_idx);

@@ -354,18 +354,18 @@ bool GDDuckDB::close_db() {
 
 
 void GDDuckDB::set_read_only(const bool &_read_only) {
-	read_only = _read_only;
+        read_only = _read_only;
 }
 
 bool GDDuckDB::get_read_only() const {
-	return read_only;
+        return read_only;
 }
 
 void GDDuckDB::set_path(const String &_path) {
-    path_utf8 = _path.utf8();
-	path = path_utf8;
+        path_utf8 = _path.utf8();
+        path = path_utf8;
 }
 
 String GDDuckDB::get_path() const {
-	return path;
+        return path;
 }
