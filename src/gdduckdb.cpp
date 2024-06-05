@@ -18,10 +18,17 @@ void GDDuckDB::_bind_methods() {
         ClassDB::bind_method(D_METHOD("connect"), &GDDuckDB::connect);
         ClassDB::bind_method(D_METHOD("disconnect"), &GDDuckDB::disconnect);
         ClassDB::bind_method(D_METHOD("query", "sql_query"), &GDDuckDB::query);
+
+        ClassDB::bind_method(D_METHOD("set_read_only", "read_only"), &GDDuckDB::set_read_only);
+	    ClassDB::bind_method(D_METHOD("get_read_only"), &GDDuckDB::get_read_only);
+        ADD_PROPERTY(PropertyInfo(Variant::BOOL, "read_only"), "set_read_only", "get_read_only");
+
+        ClassDB::bind_method(D_METHOD("set_path", "path"), &GDDuckDB::set_path);
+        ClassDB::bind_method(D_METHOD("get_path"), &GDDuckDB::get_path);
+        ADD_PROPERTY(PropertyInfo(Variant::STRING, "path"), "set_path", "get_path");        
         
         // TODO: Implement query_chunk
         //ClassDB::bind_method(D_METHOD("query_chunk", "sql_query"), &GDDuckDB::query_chunk);
-
 
         ClassDB::bind_method(D_METHOD("set_query_result", "query_result"), &GDDuckDB::set_query_result);
         ClassDB::bind_method(D_METHOD("get_query_result"), &GDDuckDB::get_query_result);
@@ -279,13 +286,33 @@ bool GDDuckDB::connect() {
 
 
 bool GDDuckDB::open_db() {
-        // Use the C API to open a DuckDB database
-        //duckdb_database db;
-        duckdb_state status = duckdb_open(nullptr, &db);
-        if (status == DuckDBError) {
-            UtilityFunctions::printerr("GDDuckDB Error: Failed to open database.");
+
+        duckdb_config config;
+        char *err;
+
+        duckdb_state config_state = duckdb_create_config(&config);
+        if (config_state == DuckDBError) {
+            UtilityFunctions::printerr("GDDuckDB Error: Failed to create database configuration.");
             return false;
         }
+
+        if (read_only) {
+            duckdb_state config_read_only_state;
+            config_read_only_state = duckdb_set_config(config, "access_mode", "READ_ONLY");
+            if (config_read_only_state == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration READ_ONLY");
+                return false;
+            }
+        }
+
+        duckdb_state open_state = duckdb_open_ext(path, &db, config, &err);
+        if (open_state == DuckDBError) {
+            UtilityFunctions::printerr("GDDuckDB Error: Failed to open database. Error: " + String(err));
+            duckdb_destroy_config(&config);
+            duckdb_free(err);
+            return false;
+        }
+        duckdb_destroy_config(&config);
         return true;
 }
 
@@ -323,4 +350,22 @@ bool GDDuckDB::close_db() {
 
         duckdb_close(&db);
         return true;
+}
+
+
+void GDDuckDB::set_read_only(const bool &_read_only) {
+	read_only = _read_only;
+}
+
+bool GDDuckDB::get_read_only() const {
+	return read_only;
+}
+
+void GDDuckDB::set_path(const String &_path) {
+    CharString path_utf8 = _path.utf8();
+	path = path_utf8;
+}
+
+String GDDuckDB::get_path() const {
+	return path;
 }
