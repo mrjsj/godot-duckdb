@@ -20,7 +20,7 @@ void GDDuckDB::_bind_methods() {
         ClassDB::bind_method(D_METHOD("query", "sql_query"), &GDDuckDB::query);
 
         ClassDB::bind_method(D_METHOD("set_read_only", "read_only"), &GDDuckDB::set_read_only);
-	    ClassDB::bind_method(D_METHOD("get_read_only"), &GDDuckDB::get_read_only);
+        ClassDB::bind_method(D_METHOD("get_read_only"), &GDDuckDB::get_read_only);
         ADD_PROPERTY(PropertyInfo(Variant::BOOL, "read_only"), "set_read_only", "get_read_only");
 
         ClassDB::bind_method(D_METHOD("set_path", "path"), &GDDuckDB::set_path);
