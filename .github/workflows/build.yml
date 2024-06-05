@@ -185,3 +185,53 @@ jobs:
             ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}/../bin.zip
           draft: true
           prerelease: true
+
+  prepare-assetlib-branch:
+    name: Prepare AssetLib Branch
+    runs-on: ubuntu-latest
+    needs: [ release ]
+    if: startsWith(github.ref, 'refs/tags/v') && contains(github.ref, 'godot-4.2.2')
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all tags and branches
+
+      - name: Find latest assetlib branch
+        id: find_branch
+        run: |
+          LATEST_ASSETLIB_BRANCH=$(git branch -r --list "origin/assetlib*" | sort -r | head -n 1)
+          LATEST_ASSETLIB_BRANCH=${LATEST_ASSETLIB_BRANCH#origin/}
+          echo "Latest assetlib branch is $LATEST_ASSETLIB_BRANCH"
+          echo "::set-output name=branch::$LATEST_ASSETLIB_BRANCH"
+
+      - name: Create and checkout new branch
+        id: new_branch
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          NEW_BRANCH_NAME="assetlib-v${TAG_NAME}-godot-4.2.2"
+          git checkout -b $NEW_BRANCH_NAME ${{ steps.find_branch.outputs.branch }}
+          echo "::set-output name=new_branch_name::$NEW_BRANCH_NAME"
+
+      - name: Clear bin directory
+        run: rm -rf addons/godot-duckdb/bin/*
+
+      - name: Extract binaries to bin directory
+        run: |
+          unzip artifacts/bin.zip -d addons/godot-duckdb/bin
+
+      - name: Commit changes and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add addons/godot-duckdb/bin
+          git commit -m "Update to latest binaries"
+          git push origin ${{ steps.new_branch.outputs.new_branch_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+
+      # - name: Push new branch to GitHub
+      #   uses: ad-m/github-push-action@v0.6.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: ${{ env.NEW_BRANCH_NAME }}
