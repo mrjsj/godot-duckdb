@@ -362,7 +362,7 @@ bool GDDuckDB::get_read_only() const {
 }
 
 void GDDuckDB::set_path(const String &_path) {
-    CharString path_utf8 = _path.utf8();
+    path_utf8 = _path.utf8();
 	path = path_utf8;
 }
 

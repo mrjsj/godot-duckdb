@@ -35,6 +35,8 @@ private:
         int64_t verbosity_level = 1;
 
 	bool read_only = false;
+        
+        CharString path_utf8;
 	const char* path = ":memory:";
 
         const char* duckdb_type_to_string(duckdb_type type);
