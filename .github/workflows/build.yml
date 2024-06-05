@@ -222,9 +222,12 @@ jobs:
       - name: Clear bin directory
         run: rm -rf addons/godot-duckdb/bin/*
 
+      - name: Check our artifacts
+        run: ls -R ${{steps.download.outputs.download-path}}
+
       - name: Extract binaries to bin directory
         run: |
-          cp -r ${{steps.download.outputs.download-path}}/bin/* ./addons/godot-duckdb/bin/*
+          cp -r ${{steps.download.outputs.download-path}}/**/bin/* ./addons/godot-duckdb/bin/*
           # #zip -r demo.zip demo/
           # #cd ${{ env.TARGET_PATH }}/..
           # zip -r bin.zip bin/
