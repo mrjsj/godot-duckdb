@@ -46,6 +46,8 @@ Built-in functionality is very limited at the moment, however, it is possible to
 
 ```gdscript
 var db = GDDuckDB.new()
+# db.set_path("path/to/db") # Optionally set path to database, otherwise opens in-memory database
+# db.set_read_only(true) # Optionally set read_only to true/false. Default is false.
 db.open_db()
 db.connect()
 
@@ -79,4 +81,12 @@ db.close_db()
 - Boolean success = **disconnect()**
 
 - Boolean success = **query(** String sql_string **)**
+
+- Boolean success = **set_path(** String path **)**
+
+- String path = **get_path()**
+
+- Boolean success = **set_read_only(** bool read_only **)**
+
+- Boolean read_only = **get_read_only()**
 
