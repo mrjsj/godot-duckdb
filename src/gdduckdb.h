@@ -34,6 +34,10 @@ private:
         std::vector<std::unique_ptr<Callable>> function_registry;
         int64_t verbosity_level = 1;
 
+        bool read_only = false;
+        
+        CharString path_utf8;
+        const char* path = ":memory:";
 
         const char* duckdb_type_to_string(duckdb_type type);
         Variant map_duckdb_type_to_godot_variant(duckdb_result &result, idx_t col_idx, idx_t row_idx);
@@ -68,7 +72,11 @@ public:
 
         TypedArray<Dictionary> get_query_result() const;
 
-        //void _process(double delta);
+        void set_read_only(const bool &_read_only);
+        bool get_read_only() const;
+        void set_path(const String &_path);
+        String get_path() const;
+
 };
 
 }
