@@ -220,39 +220,20 @@ jobs:
         with:
           path: artifacts          
 
-      - name: Show current directory
-        run: ls -R
-
       - name: Clear bin directory
         run: |
           rm -r ./addons/godot-duckdb/bin/*
 
-      - name: Check current dir
-        run: ls -R ${{steps.download.outputs.download-path}}
-
-      - name: Extract binaries to bin directory
+      - name: Copy artifacts to bin directory
         run: |
           cp -r ./artifacts/**/* ./addons/godot-duckdb/bin/
-          # #zip -r demo.zip demo/
-          # #cd ${{ env.TARGET_PATH }}/..
-          # zip -r bin.zip bin/
-          # cp -r bin/
-          # unzip artifacts/bin.zip -d addons/godot-duckdb/bin
 
       - name: Commit changes and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          #cd addons/godot-duckdb/bin
-          git status
           git add ./addons/godot-duckdb/bin/
           git commit -m "Update to latest binaries"
           git push origin ${{ steps.new_branch.outputs.new_branch_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-
-      # - name: Push new branch to GitHub
-      #   uses: ad-m/github-push-action@v0.6.0
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     branch: ${{ env.NEW_BRANCH_NAME }}
