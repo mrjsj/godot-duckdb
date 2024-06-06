@@ -238,7 +238,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          cd addons/godot-duckdb/bin
+          #cd addons/godot-duckdb/bin
           git add .
           git commit -m "Update to latest binaries"
           git push origin ${{ steps.new_branch.outputs.new_branch_name }}
