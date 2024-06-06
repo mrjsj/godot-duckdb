@@ -220,11 +220,11 @@ jobs:
           echo "::set-output name=new_branch_name::$NEW_BRANCH_NAME"
 
       - name: Show current directory
-        run: pwd
+        run: ls -R
 
       - name: Clear bin directory
         run: |
-          rm -rf addons/godot-duckdb/bin/*
+          rm -r ./addons/godot-duckdb/bin/*
 
       - name: Check current dir
         run: ls -R ${{steps.download.outputs.download-path}}
@@ -243,6 +243,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           #cd addons/godot-duckdb/bin
+          git status
           git add ./addons/godot-duckdb/bin/
           git commit -m "Update to latest binaries"
           git push origin ${{ steps.new_branch.outputs.new_branch_name }}
