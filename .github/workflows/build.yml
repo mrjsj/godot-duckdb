@@ -142,9 +142,9 @@ jobs:
       - name: Upload Artifact
         env:
           ARTIFACT_FOLDER: ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.platform }}
+          name: artifact-${{ matrix.platform }}-${{ matrix.target }}
           path: ${{ env.ARTIFACT_FOLDER }}
           if-no-files-found: error
 
@@ -163,7 +163,7 @@ jobs:
 
       - name: Download Artifacts
         id: download
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
@@ -171,7 +171,12 @@ jobs:
         run: |
           mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
           cd ${{ env.PROJECT_FOLDER }}
-          cp -r ${{steps.download.outputs.download-path}}/**/* ${{ env.TARGET_PATH }}
+
+          cp -rf ${{steps.download.outputs.download-path}}/artifact-macos-template_debug/* ${{ env.TARGET_PATH }}
+          cp -rf ${{steps.download.outputs.download-path}}/artifact-macos-template_release/* ${{ env.TARGET_PATH }}
+          cp -rf ${{steps.download.outputs.download-path}}/artifact-windows-template_debug/* ${{ env.TARGET_PATH }}
+          cp -rf ${{steps.download.outputs.download-path}}/artifact-windows-template_release/* ${{ env.TARGET_PATH }}
+
           zip -r demo.zip demo/
           cd ${{ env.TARGET_PATH }}/..
           zip -r bin.zip bin/
@@ -216,7 +221,7 @@ jobs:
 
       - name: Download Artifacts
         id: download
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts          
 
@@ -226,7 +231,10 @@ jobs:
 
       - name: Copy artifacts to bin directory
         run: |
-          cp -r ./artifacts/**/* ./addons/godot-duckdb/bin/
+          cp -rf ./artifacts/artifact-macos-template_debug/* ./addons/godot-duckdb/bin/
+          cp -rf ./artifacts/artifact-macos-template_release/* ./addons/godot-duckdb/bin/
+          cp -rf ./artifacts/artifact-windows-template_debug/* ./addons/godot-duckdb/bin/
+          cp -rf ./artifacts/artifact-windows-template_release/* ./addons/godot-duckdb/bin/
 
       - name: Commit changes and push
         run: |
