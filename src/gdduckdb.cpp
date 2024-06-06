@@ -115,11 +115,7 @@ bool GDDuckDB::query_chunk(const String &sql_query) {
                 data_dict[String(col_name)] = col_value;
                 query_result.push_back(data_dict);
 
-                UtilityFunctions::print("This happened");
-
-                
                 UtilityFunctions::print(col_value);
-
             }
         }
         return true;
