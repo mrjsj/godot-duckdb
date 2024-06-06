@@ -25,7 +25,19 @@ void GDDuckDB::_bind_methods() {
 
         ClassDB::bind_method(D_METHOD("set_path", "path"), &GDDuckDB::set_path);
         ClassDB::bind_method(D_METHOD("get_path"), &GDDuckDB::get_path);
-        ADD_PROPERTY(PropertyInfo(Variant::STRING, "path"), "set_path", "get_path");        
+        ADD_PROPERTY(PropertyInfo(Variant::STRING, "path"), "set_path", "get_path");
+
+        ClassDB::bind_method(D_METHOD("set_threads", "threads"), &GDDuckDB::set_threads);
+        ClassDB::bind_method(D_METHOD("get_threads"), &GDDuckDB::get_threads);
+        ADD_PROPERTY(PropertyInfo(Variant::STRING, "threads"), "set_threads", "get_threads");     
+
+        ClassDB::bind_method(D_METHOD("set_max_memory", "max_memory"), &GDDuckDB::set_max_memory);
+        ClassDB::bind_method(D_METHOD("get_max_memory"), &GDDuckDB::get_max_memory);
+        ADD_PROPERTY(PropertyInfo(Variant::STRING, "max_memory"), "set_max_memory", "get_max_memory");     
+
+        ClassDB::bind_method(D_METHOD("set_default_order", "default_order"), &GDDuckDB::set_default_order);
+        ClassDB::bind_method(D_METHOD("get_default_order"), &GDDuckDB::get_default_order);
+        ADD_PROPERTY(PropertyInfo(Variant::STRING, "default_order"), "set_default_order", "get_default_order");                             
         
         // TODO: Implement query_chunk
         //ClassDB::bind_method(D_METHOD("query_chunk", "sql_query"), &GDDuckDB::query_chunk);
@@ -286,20 +298,43 @@ bool GDDuckDB::open_db() {
         duckdb_config config;
         char *err;
 
-        duckdb_state config_state = duckdb_create_config(&config);
-        if (config_state == DuckDBError) {
+        if (duckdb_create_config(&config) == DuckDBError) {
             UtilityFunctions::printerr("GDDuckDB Error: Failed to create database configuration.");
             return false;
         }
 
-        if (read_only) {
-            duckdb_state config_read_only_state;
-            config_read_only_state = duckdb_set_config(config, "access_mode", "READ_ONLY");
-            if (config_read_only_state == DuckDBError) {
-                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration READ_ONLY");
+        if (read_only == true) {
+            if (duckdb_set_config(config, "access_mode", "READ_ONLY") == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration: access_mode = READ_ONLY");
+                return false;
+            }
+        } else {
+            if (duckdb_set_config(config, "access_mode", "READ_WRITE") == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration: access_mode = READ_WRITE");
                 return false;
             }
         }
+
+        if (threads) {
+            if (duckdb_set_config(config, "threads", threads) == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration: threads = " + String(threads));
+                return false;
+            }
+        }
+
+        if (max_memory) {
+            if (duckdb_set_config(config, "max_memory", max_memory) == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration: max_memory = " + String(max_memory));
+                return false;
+            }
+        }
+
+        if (default_order) {
+            if (duckdb_set_config(config, "default_order", default_order) == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration: default_order = " + String(default_order));
+                return false;
+            }
+        }        
 
         duckdb_state open_state = duckdb_open_ext(path, &db, config, &err);
         if (open_state == DuckDBError) {
@@ -364,4 +399,31 @@ void GDDuckDB::set_path(const String &_path) {
 
 String GDDuckDB::get_path() const {
         return path;
+}
+
+void GDDuckDB::set_threads(const String &_threads) {
+        threads_utf8 = _threads.utf8();
+        threads = threads_utf8;
+}
+
+String GDDuckDB::get_threads() const {
+        return threads;
+}
+
+void GDDuckDB::set_max_memory(const String &_max_memory) {
+        max_memory_utf8 = _max_memory.utf8();
+        max_memory = max_memory_utf8;
+}
+
+String GDDuckDB::get_max_memory() const {
+        return max_memory;
+}
+
+void GDDuckDB::set_default_order(const String &_default_order) {
+        default_order_utf8 = _default_order.utf8();
+        default_order = default_order_utf8;
+}
+
+String GDDuckDB::get_default_order() const {
+        return default_order;
 }

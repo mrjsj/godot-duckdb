@@ -35,8 +35,15 @@ private:
         int64_t verbosity_level = 1;
 
         bool read_only = false;
+        const char* threads;
+        const char* max_memory;
+        const char* default_order;
         
         CharString path_utf8;
+        CharString threads_utf8;
+        CharString max_memory_utf8;
+        CharString default_order_utf8;
+
         const char* path = ":memory:";
 
         const char* duckdb_type_to_string(duckdb_type type);
@@ -58,8 +65,7 @@ public:
         GDDuckDB();
         ~GDDuckDB();
 
-        // Functions
-        bool hello_world();
+        // Methods
         bool open_db();
         bool close_db();
         bool connect();
@@ -72,8 +78,21 @@ public:
 
         TypedArray<Dictionary> get_query_result() const;
 
+        // Configurations
         void set_read_only(const bool &_read_only);
         bool get_read_only() const;
+
+        void set_threads(const String &_threads);
+        String get_threads() const;
+
+        void set_max_memory(const String &_max_memory);
+        String get_max_memory() const;
+
+        void set_default_order(const String &_default_order);
+        String get_default_order() const;                
+
+
+        // Properties
         void set_path(const String &_path);
         String get_path() const;
 
