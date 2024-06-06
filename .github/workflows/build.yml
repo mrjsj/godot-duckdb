@@ -215,14 +215,18 @@ jobs:
         id: new_branch
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          NEW_BRANCH_NAME="assetlib-v${TAG_NAME}-godot-4.2.2"
+          NEW_BRANCH_NAME="assetlib-${TAG_NAME}"
           git checkout -b $NEW_BRANCH_NAME ${{ steps.find_branch.outputs.branch }}
           echo "::set-output name=new_branch_name::$NEW_BRANCH_NAME"
 
-      - name: Clear bin directory
-        run: rm -rf addons/godot-duckdb/bin/*
+      - name: Show current directory
+        run: pwd
 
-      - name: Check our artifacts
+      - name: Clear bin directory
+        run: |
+          rm -rf addons/godot-duckdb/bin/*
+
+      - name: Check current dir
         run: ls -R ${{steps.download.outputs.download-path}}
 
       - name: Extract binaries to bin directory
@@ -239,7 +243,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           #cd addons/godot-duckdb/bin
-          git add .
+          git add ./addons/godot-duckdb/bin/
           git commit -m "Update to latest binaries"
           git push origin ${{ steps.new_branch.outputs.new_branch_name }}
         env:
