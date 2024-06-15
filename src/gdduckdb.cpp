@@ -384,44 +384,112 @@ bool GDDuckDB::close_db() {
 }
 
 
-void GDDuckDB::set_read_only(const bool &_read_only) {
+bool GDDuckDB::set_read_only(const bool &_read_only) {
+        if (db) {
+            UtilityFunctions::printerr("GDDuckDB Error: Can't set read_only when database is already open!");
+            return false;
+        }
         read_only = _read_only;
+        return true;
 }
 
 bool GDDuckDB::get_read_only() const {
         return read_only;
 }
 
-void GDDuckDB::set_path(const String &_path) {
+bool GDDuckDB::set_path(const String &_path) {
+        if (db) {
+            UtilityFunctions::printerr("GDDuckDB Error: Can't set path when database is already open!");
+            return false;
+        }
         path_utf8 = _path.utf8();
         path = path_utf8;
+        return true;
 }
 
 String GDDuckDB::get_path() const {
         return path;
 }
 
-void GDDuckDB::set_threads(const String &_threads) {
+bool GDDuckDB::set_threads(const String &_threads) {
+
+        duckdb_result result;
+
+        if (db && con) {
+            String sql_query = "SET threads TO " + _threads;
+            if (duckdb_query(con, sql_query.utf8(), &result) == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration: threads = " + String(_threads));
+                duckdb_destroy_result(&result);
+                return false;
+            }
+            duckdb_destroy_result(&result);
+        }
+
+        if (db && !con) {
+            UtilityFunctions::printerr("GDDuckDB Error: Can't set database configuration: threads = " + String(_threads) + " when no connection is connected!");
+            return false;
+        }
+
         threads_utf8 = _threads.utf8();
         threads = threads_utf8;
+        return true;
 }
 
 String GDDuckDB::get_threads() const {
         return threads;
 }
 
-void GDDuckDB::set_max_memory(const String &_max_memory) {
+bool GDDuckDB::set_max_memory(const String &_max_memory) {
+
+        duckdb_result result;
+
+        if (db && con) {
+            String sql_query = "SET memory_limit = '" + _max_memory + "'";
+            if (duckdb_query(con, sql_query.utf8(), &result) == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration: memory_limit = " + String(_max_memory));
+                duckdb_destroy_result(&result);
+                return false;
+            }
+            duckdb_destroy_result(&result);
+        }
+
+        if (db && !con) {
+            UtilityFunctions::printerr("GDDuckDB Error: Can't set database configuration: memory_limit = " + String(_max_memory) + " when no connection is connected!");
+            return false;
+        }
+
+
         max_memory_utf8 = _max_memory.utf8();
         max_memory = max_memory_utf8;
+        return true;
 }
 
 String GDDuckDB::get_max_memory() const {
         return max_memory;
 }
 
-void GDDuckDB::set_default_order(const String &_default_order) {
+bool GDDuckDB::set_default_order(const String &_default_order) {
+
+        duckdb_result result;
+
+        if (db && con) {
+            String sql_query = "SET default_order = '" + _default_order.to_upper() + "'";
+            if (duckdb_query(con, sql_query.utf8(), &result) == DuckDBError) {
+                UtilityFunctions::printerr("GDDuckDB Error: Failed to set database configuration: default_order = " + String(_default_order));
+                duckdb_destroy_result(&result);
+                return false;
+            }
+            duckdb_destroy_result(&result);
+        }
+
+        if (db && !con) {
+            UtilityFunctions::printerr("GDDuckDB Error: Can't set database configuration: default_order = " + String(_default_order) + " when no connection is connected!");
+            return false;
+        }
+
         default_order_utf8 = _default_order.utf8();
         default_order = default_order_utf8;
+        return true;
 }
 
 String GDDuckDB::get_default_order() const {
