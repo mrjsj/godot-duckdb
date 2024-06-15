@@ -1,6 +1,7 @@
 {
     "targets": [
-        "template_debug"
+        "template_debug",
+        "template_release"
     ],
     "jobs": [
         {
@@ -9,7 +10,7 @@
             "platform": "macos",
             "artifact-extension": "framework",
             "flags": "arch=universal",
-            "skip": true,
+            "skip": false,
             "cache-name": "macos-universal",
             "duckdb-url-name": "libduckdb-osx-universal",
             "duckdb-lib-name": "libduckdb.dylib"            
@@ -30,7 +31,7 @@
             "os": "windows-latest",
             "platform": "windows",
             "artifact-extension": "dll",
-            "skip": true,
+            "skip": false,
             "flags": "use_mingw=yes",
             "cache-name": "win-x86_64-mingw",
             "duckdb-url-name": "libduckdb-windows-amd64",
