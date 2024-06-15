@@ -79,21 +79,20 @@ public:
         TypedArray<Dictionary> get_query_result() const;
 
         // Configurations
-        void set_read_only(const bool &_read_only);
+        bool set_read_only(const bool &_read_only);
         bool get_read_only() const;
 
-        void set_threads(const String &_threads);
+        bool set_threads(const String &_threads);
         String get_threads() const;
 
-        void set_max_memory(const String &_max_memory);
+        bool set_max_memory(const String &_max_memory);
         String get_max_memory() const;
 
-        void set_default_order(const String &_default_order);
+        bool set_default_order(const String &_default_order);
         String get_default_order() const;                
 
-
         // Properties
-        void set_path(const String &_path);
+        bool set_path(const String &_path);
         String get_path() const;
 
 };
