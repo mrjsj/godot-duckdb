@@ -127,7 +127,6 @@ jobs:
           cp ${{ matrix.duckdb-url-name }}/${{ matrix.duckdb-lib-name }} ${{ env.TARGET_PATH }}/${{ matrix.duckdb-lib-name }}
           cp ${{ matrix.duckdb-url-name }}/libduckdb_static.a ${{ env.TARGET_PATH }}/libduckdb_static.a
           ls -R ./${{ env.TARGET_PATH }}
-          ldd ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}.so
 
       - name: Copy DuckDB binaries and fix link (MacOS)
         if: ${{ matrix.platform == 'macos' }}
