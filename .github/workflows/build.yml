@@ -209,15 +209,15 @@ jobs:
           LATEST_ASSETLIB_BRANCH=$(git branch -r --list "origin/assetlib*" | sort -r | head -n 1)
           LATEST_ASSETLIB_BRANCH=${LATEST_ASSETLIB_BRANCH#origin/}
           echo "Latest assetlib branch is $LATEST_ASSETLIB_BRANCH"
-          echo "::set-output name=branch::$LATEST_ASSETLIB_BRANCH"
+          echo "LATEST_ASSETLIB_BRANCH=${LATEST_ASSETLIB_BRANCH}" >> "$GITHUB_OUTPUT"
 
       - name: Create and checkout new branch
         id: new_branch
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           NEW_BRANCH_NAME="assetlib-${TAG_NAME}"
-          git checkout -b $NEW_BRANCH_NAME ${{ steps.find_branch.outputs.branch }}
-          echo "::set-output name=new_branch_name::$NEW_BRANCH_NAME"
+          git checkout -b $NEW_BRANCH_NAME ${{ steps.find_branch.outputs.LATEST_ASSETLIB_BRANCH }}
+          echo "NEW_BRANCH_NAME=${NEW_BRANCH_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Download Artifacts
         id: download
@@ -242,6 +242,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add ./addons/godot-duckdb/bin/
           git commit -m "Update to latest binaries"
-          git push origin ${{ steps.new_branch.outputs.new_branch_name }}
+          git push origin ${{ steps.new_branch.outputs.NEW_BRANCH_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
