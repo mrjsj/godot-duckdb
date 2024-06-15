@@ -39,6 +39,7 @@
         {
             "name": "Ubuntu (x86_64)",
             "os": "ubuntu-20.04",
+            "arch": "x86_64",
             "platform": "linux",
             "artifact-extension": "so",
             "skip": false,
@@ -50,9 +51,10 @@
             "name": "Ubuntu (arm64)",
             "os": "ubuntu-20.04",
             "platform": "linux",
+            "arch": "arm64",
             "artifact-extension": "so",
-            "skip": false,
-            "cache-name": "linux-x86_64",
+            "skip": true,
+            "cache-name": "linux-arm64",
             "duckdb-url-name": "libduckdb-linux-aarch64",
             "duckdb-lib-name": "libduckdb.so"            
         },        
