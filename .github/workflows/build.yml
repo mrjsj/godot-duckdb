@@ -108,20 +108,25 @@ jobs:
           cp ${{ matrix.duckdb-url-name }}\${{ matrix.duckdb-lib-name }}.dll ${{ env.TARGET_PATH }}\${{ matrix.duckdb-lib-name }}.dll
           cp ${{ matrix.duckdb-url-name }}\${{ matrix.duckdb-lib-name }}.lib ${{ env.TARGET_PATH }}\${{ matrix.duckdb-lib-name }}.lib          
           ls -R
-          scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=duckdb target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
-
-      # - name: Windows Compilation Dump Dependants
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #     dumpbin /DEPENDENTS ${{ env.TARGET_PATH }}\libgdduckdb.windows.template_debug.x86_64
+          scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=duckdb target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
       - name: Not Windows Compilation
         if: runner.os != 'Windows'
         run: |
+          curl -OL ${{ env.DUCKDB_BASE_URL }}${{ matrix.duckdb-url-name }}.zip
+          unzip ${{ matrix.duckdb-url-name }}.zip -d ${{ matrix.duckdb-url-name }}
+        
           mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
           cd ${{ env.PROJECT_FOLDER }}
           ls -R
-          scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
+          scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=${{ matrix.duckdb-lib-name }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
+
+      - name: Copy DuckDB binaries (linux)
+        if: ${{ matrix.platform == 'linux' }}
+        run: |
+          cp ${{ matrix.duckdb-url-name }}/${{ matrix.duckdb-lib-name }} ${{ env.TARGET_PATH }}/${{ matrix.duckdb-lib-name }}
+          cp ${{ matrix.duckdb-url-name }}/libduckdb_static.a ${{ env.TARGET_PATH }}/libduckdb_static.a
+          ls -R ./${{ env.TARGET_PATH }}
 
       - name: Copy DuckDB binaries and fix link (MacOS)
         if: ${{ matrix.platform == 'macos' }}
@@ -131,6 +136,12 @@ jobs:
           ls -R ./${{ env.TARGET_PATH }}
           otool -L ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}.framework/${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}
 
+      # - name: Copy DuckDB binaries (linux)
+      #   if: ${{ matrix.platform == 'linux' }}
+      #   run: |
+      #     cp ./src/duckdb/libduckdb.so ./${{ env.TARGET_PATH }}/libduckdb.so
+      #     ls -R ./${{ env.TARGET_PATH }}
+      #     ldd ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}.so
       # - name: Copy DuckDB binaries and fix link (Not MacOS)
       #   if: ${{ matrix.platform != 'macos' }}
       #   run: |
@@ -176,6 +187,8 @@ jobs:
           cp -rf ${{steps.download.outputs.download-path}}/artifact-macos-template_release/* ${{ env.TARGET_PATH }}
           cp -rf ${{steps.download.outputs.download-path}}/artifact-windows-template_debug/* ${{ env.TARGET_PATH }}
           cp -rf ${{steps.download.outputs.download-path}}/artifact-windows-template_release/* ${{ env.TARGET_PATH }}
+          cp -rf ${{steps.download.outputs.download-path}}/artifact-linux-template_debug/* ${{ env.TARGET_PATH }}
+          cp -rf ${{steps.download.outputs.download-path}}/artifact-linux-template_release/* ${{ env.TARGET_PATH }}          
 
           zip -r demo.zip demo/
           cd ${{ env.TARGET_PATH }}/..
@@ -209,15 +222,15 @@ jobs:
           LATEST_ASSETLIB_BRANCH=$(git branch -r --list "origin/assetlib*" | sort -r | head -n 1)
           LATEST_ASSETLIB_BRANCH=${LATEST_ASSETLIB_BRANCH#origin/}
           echo "Latest assetlib branch is $LATEST_ASSETLIB_BRANCH"
-          echo "::set-output name=branch::$LATEST_ASSETLIB_BRANCH"
+          echo "LATEST_ASSETLIB_BRANCH=${LATEST_ASSETLIB_BRANCH}" >> "$GITHUB_OUTPUT"
 
       - name: Create and checkout new branch
         id: new_branch
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           NEW_BRANCH_NAME="assetlib-${TAG_NAME}"
-          git checkout -b $NEW_BRANCH_NAME ${{ steps.find_branch.outputs.branch }}
-          echo "::set-output name=new_branch_name::$NEW_BRANCH_NAME"
+          git checkout -b $NEW_BRANCH_NAME ${{ steps.find_branch.outputs.LATEST_ASSETLIB_BRANCH }}
+          echo "NEW_BRANCH_NAME=${NEW_BRANCH_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Download Artifacts
         id: download
@@ -235,6 +248,8 @@ jobs:
           cp -rf ./artifacts/artifact-macos-template_release/* ./addons/godot-duckdb/bin/
           cp -rf ./artifacts/artifact-windows-template_debug/* ./addons/godot-duckdb/bin/
           cp -rf ./artifacts/artifact-windows-template_release/* ./addons/godot-duckdb/bin/
+          cp -rf ./artifacts/artifact-linux-template_debug/* ./addons/godot-duckdb/bin/
+          cp -rf ./artifacts/artifact-linux-template_release/* ./addons/godot-duckdb/bin/          
 
       - name: Commit changes and push
         run: |
@@ -242,6 +257,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add ./addons/godot-duckdb/bin/
           git commit -m "Update to latest binaries"
-          git push origin ${{ steps.new_branch.outputs.new_branch_name }}
+          git push origin ${{ steps.new_branch.outputs.NEW_BRANCH_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
