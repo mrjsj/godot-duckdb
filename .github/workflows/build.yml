@@ -187,6 +187,8 @@ jobs:
           cp -rf ${{steps.download.outputs.download-path}}/artifact-macos-template_release/* ${{ env.TARGET_PATH }}
           cp -rf ${{steps.download.outputs.download-path}}/artifact-windows-template_debug/* ${{ env.TARGET_PATH }}
           cp -rf ${{steps.download.outputs.download-path}}/artifact-windows-template_release/* ${{ env.TARGET_PATH }}
+          cp -rf ${{steps.download.outputs.download-path}}/artifact-linux-template_debug/* ${{ env.TARGET_PATH }}
+          cp -rf ${{steps.download.outputs.download-path}}/artifact-linux-template_release/* ${{ env.TARGET_PATH }}          
 
           zip -r demo.zip demo/
           cd ${{ env.TARGET_PATH }}/..
@@ -246,6 +248,8 @@ jobs:
           cp -rf ./artifacts/artifact-macos-template_release/* ./addons/godot-duckdb/bin/
           cp -rf ./artifacts/artifact-windows-template_debug/* ./addons/godot-duckdb/bin/
           cp -rf ./artifacts/artifact-windows-template_release/* ./addons/godot-duckdb/bin/
+          cp -rf ./artifacts/artifact-linux-template_debug/* ./addons/godot-duckdb/bin/
+          cp -rf ./artifacts/artifact-linux-template_release/* ./addons/godot-duckdb/bin/          
 
       - name: Commit changes and push
         run: |
