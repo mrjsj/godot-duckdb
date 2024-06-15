@@ -108,20 +108,18 @@ jobs:
           cp ${{ matrix.duckdb-url-name }}\${{ matrix.duckdb-lib-name }}.dll ${{ env.TARGET_PATH }}\${{ matrix.duckdb-lib-name }}.dll
           cp ${{ matrix.duckdb-url-name }}\${{ matrix.duckdb-lib-name }}.lib ${{ env.TARGET_PATH }}\${{ matrix.duckdb-lib-name }}.lib          
           ls -R
-          scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=duckdb target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
-
-      # - name: Windows Compilation Dump Dependants
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #     dumpbin /DEPENDENTS ${{ env.TARGET_PATH }}\libgdduckdb.windows.template_debug.x86_64
+          scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=duckdb target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
       - name: Not Windows Compilation
         if: runner.os != 'Windows'
         run: |
+          curl -OL ${{ env.DUCKDB_BASE_URL }}${{ matrix.duckdb-url-name }}.zip
+          unzip ${{ matrix.duckdb-url-name }}.zip -d ${{ matrix.duckdb-url-name }}
+        
           mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
           cd ${{ env.PROJECT_FOLDER }}
           ls -R
-          scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
+          scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} duckdb_lib_path=${{ matrix.duckdb-url-name }} duckdb_lib_name=${{ matrix.duckdb-lib-name }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
 
       - name: Copy DuckDB binaries and fix link (MacOS)
         if: ${{ matrix.platform == 'macos' }}
@@ -131,6 +129,12 @@ jobs:
           ls -R ./${{ env.TARGET_PATH }}
           otool -L ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}.framework/${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}
 
+      # - name: Copy DuckDB binaries (linux)
+      #   if: ${{ matrix.platform == 'linux' }}
+      #   run: |
+      #     cp ./src/duckdb/libduckdb.so ./${{ env.TARGET_PATH }}/libduckdb.so
+      #     ls -R ./${{ env.TARGET_PATH }}
+      #     ldd ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}.${{ matrix.platform }}.${{ matrix.target }}.so
       # - name: Copy DuckDB binaries and fix link (Not MacOS)
       #   if: ${{ matrix.platform != 'macos' }}
       #   run: |
