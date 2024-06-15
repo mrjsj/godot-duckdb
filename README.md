@@ -10,9 +10,9 @@ It is heavily inspired by the [godot-sqlite](https://github.com/2shady4u/godot-s
 ### Supported operating systems:
 - Mac OS X (universal)
 - Windows
+- Linux
 
 #### Planned supported operating systems
-- Linux
 - Android (arm64)
 - iOS (arm64)
 - HTML5 (stability depends on browser)
