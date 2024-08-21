@@ -51,8 +51,8 @@ jobs:
           lfs: true
           submodules: recursive
 
-      - name: Setup Godot build cache
-        uses: ./godot-cpp/.github/actions/godot-cache
+      - name: Restore Godot build cache
+        uses: ./godot-cpp/.github/actions/godot-cache-restore
         with:
           cache-name: ${{ matrix.cache-name }}-${{ matrix.target }}
         continue-on-error: true
@@ -149,6 +149,11 @@ jobs:
       #     install_name_tool -change @rpath/libduckdb.dylib @loader_path/../libduckdb.dylib ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}${{ env.suffix }}${{ env.SHLIBSUFFIX }}
       #     ls -R ./${{ env.TARGET_PATH }}          
       #     otool -L ./${{ env.TARGET_PATH }}${{ env.TARGET_NAME }}${{ env.suffix }}${{ env.SHLIBSUFFIX }}        
+
+      - name: Save Godot build cache
+        uses: ./godot-cpp/.github/actions/godot-cache-save
+        with:
+          cache-name: ${{ matrix.cache-name }}-${{ matrix.target }}
 
       - name: Upload Artifact
         env:
