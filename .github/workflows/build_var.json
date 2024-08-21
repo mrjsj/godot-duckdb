@@ -6,7 +6,7 @@
     "jobs": [
         {
             "name": "MacOS (universal)",
-            "os": "macos-11",
+            "os": "macos-latest",
             "platform": "macos",
             "artifact-extension": "framework",
             "flags": "arch=universal",
