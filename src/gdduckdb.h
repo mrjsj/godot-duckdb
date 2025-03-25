@@ -35,9 +35,9 @@ private:
         int64_t verbosity_level = 1;
 
         bool read_only = false;
-        const char* threads;
-        const char* max_memory;
-        const char* default_order;
+        const char* threads = nullptr;
+        const char* max_memory = nullptr;
+        const char* default_order = nullptr;
         
         CharString path_utf8;
         CharString threads_utf8;
