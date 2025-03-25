@@ -1,7 +1,6 @@
 name: 🌈 All Builds
 on:
   push:
-    branches: [ main ]
     paths:
       - "src/**"
       - ".github/**"
