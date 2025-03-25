@@ -31,3 +31,5 @@ src/*.os
 .DS_Store
 .vscode
 backup_0.10.3
+
+.venv
