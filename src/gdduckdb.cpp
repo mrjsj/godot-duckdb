@@ -227,7 +227,7 @@ Variant GDDuckDB::map_duckdb_type_to_godot_variant(duckdb_result &result, idx_t 
             case DUCKDB_TYPE_VARCHAR:
                 {
                     char *str_value = duckdb_value_string(&result, col_idx, row_idx).data;
-                    col_value = Variant(String(str_value));
+                    col_value = Variant(String::utf8(str_value));
                     duckdb_free(str_value);
                 }
                 break;
