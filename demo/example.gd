@@ -8,11 +8,18 @@ func _ready():
 	db.open_db()
 	db.connect()
 	
+	# Normal query
 	var sql_query = "SELECT 'Hello, world!' as msg;"
 	db.query(sql_query)
 	
 	var result = db.get_query_result()
 	print(result)
+	
+	# Query with error
+	var query = db.query("SELECT a;")
+	if query == false:
+		var error_result = db.get_query_result()
+		print(error_result)
 	
 	var data_query = """
 	-- Create a new table with the specified columns
