@@ -142,15 +142,20 @@ bool GDDuckDB::query(const String &sql_query) {
         duckdb_result result;
         duckdb_state status = duckdb_query(con, sql_query.utf8(), &result);
 
+        query_result.clear(); // Clear previous results
+        
+        Dictionary result_dict;
+        
         if (status == DuckDBError) {
             UtilityFunctions::printerr("GDDuckDB Error: Failed to run query: " + String(duckdb_result_error(&result)));
+            result_dict["error"] = String(duckdb_result_error(&result));
+            query_result.append(result_dict);
             duckdb_destroy_result(&result);
             return false;
         }
 
         idx_t column_count = duckdb_column_count(&result);
         idx_t row_count = duckdb_row_count(&result);
-        query_result.clear(); // Clear previous results
 
 
         for (idx_t row_idx = 0; row_idx < row_count; ++row_idx) {
