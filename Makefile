@@ -6,7 +6,7 @@ gd-update:
 	git submodule update --remote --merge
 
 duckdb-update:
-	wget https://github.com/duckdb/duckdb/releases/download/v1.3.2/libduckdb-linux-amd64.zip
+	wget https://github.com/duckdb/duckdb/releases/download/v1.5.0/libduckdb-linux-amd64.zip
 	unzip libduckdb-linux-amd64.zip
 	mv duckdb.h src/duckdb/duckdb.h
 	mv duckdb.hpp src/duckdb/duckdb.hpp
