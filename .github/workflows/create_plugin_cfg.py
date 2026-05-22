@@ -32,6 +32,7 @@ if __name__ == "__main__":
     print(content)
     print()
     
-    os.makedirs("addons", exist_ok=True)
-    with open("addons/plugin.cfg", "w") as f:
+    plugin_path = "addons/godot-duckdb"
+    os.makedirs(plugin_path, exist_ok=True)
+    with open(f"{plugin_path}/plugin.cfg", "w") as f:
         f.write(content)
