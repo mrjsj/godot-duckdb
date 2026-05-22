@@ -248,7 +248,9 @@ jobs:
 
       - name: Create plugin.cfg
         run: |
-          python .github/workflows/create_plugin_cfg.py ${GITHUB_REF#refs/tags/}
+          wget https://raw.githubusercontent.com/mrjsj/godot-duckdb/refs/tags/${GITHUB_REF#refs/tags/}/.github/workflows/create_plugin_cfg.py
+          python create_plugin_cfg.py ${GITHUB_REF#refs/tags/}
+          rm create_plugin_cfg.py
 
       - name: Copy artifacts to bin directory
         run: |
