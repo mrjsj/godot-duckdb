@@ -1,9 +1,9 @@
 
 # First update .gitmodules to desired branch/version
 gd-update:
-	git submodule update --init --recursive
-	git submodule sync
-	git submodule update --remote --merge
+#	git submodule update --init --recursive
+	git submodule sync -- godot-cpp
+	git submodule update --init --remote --checkout -- godot-cpp
 
 duckdb-update:
 	wget https://github.com/duckdb/duckdb/releases/download/v1.5.0/libduckdb-linux-amd64.zip
