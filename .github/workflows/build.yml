@@ -246,6 +246,10 @@ jobs:
         run: |
           rm -r ./addons/godot-duckdb/bin/*
 
+      - name: Create plugin.cfg
+        run: |
+          python .github/workflows/create_plugin_cfg.py ${GITHUB_REF#refs/tags/}
+
       - name: Copy artifacts to bin directory
         run: |
           cp -rf ./artifacts/artifact-macos-template_debug/* ./addons/godot-duckdb/bin/
